@@ -1,0 +1,24 @@
+let exA (x,y) =
+    let x1 = x+y
+    in let y1 = x-y
+    in (x1,y1)
+
+ let exB (x,y) =
+  let result = x-.y
+  in if result >= 0. then true
+  else false
+
+let exC (a,x) =
+  if x = 0 && a = [] then
+    a
+  else a
+
+let calculatePi (epsilon) =
+  if epsilon <=0. then raise(Failure "Illegal value for epsilon")
+  else
+    let rec calc(curEl,prevEl,epsilon,product) =
+      if abs_float((2./.(curEl))-.(2./.prevEl)) <= epsilon then
+        (2. /. (product))
+      else
+        calc(sqrt(0.5 +. (0.5 *. curEl)), curEl, epsilon, product *. sqrt(0.5 +. (0.5 *. curEl)) )
+    in calc(sqrt(0.5), 0., epsilon, sqrt(0.5))
