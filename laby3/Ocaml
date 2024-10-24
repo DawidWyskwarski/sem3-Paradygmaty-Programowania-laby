@@ -1,0 +1,25 @@
+Ex1
+let revAfterN(list, n) =
+  if list = [] then
+    []
+  else if n<0 || n> List.length list then
+    raise(Failure "niepoprawna wartosc n")
+  else if n = List.length list then
+    list
+  else let rec reverse(before, after, n) =
+         if n = 0 then after @ (List.rev before)
+         else reverse((List.hd after) :: before, List.tl after, n-1 )
+    in reverse([],list,n)
+
+Ex2
+let multiplyList(list) =
+  if list = [] then
+    []
+  else let rec doTheThing(resultList,list,multiply,index) =
+         if list = [] then
+           List.rev resultList
+         else if multiply > 0 then
+           doTheThing((List.hd list) :: resultList, list, multiply-1,index)
+         else
+           doTheThing(resultList, (List.tl list), index+1, index+1)
+    in doTheThing([],list,1,1)
