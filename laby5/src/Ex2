@@ -1,0 +1,9 @@
+let (+) v1 v2 = 
+  let rec add (v1,v2) = 
+    match (v1, v2) with
+    | (head1 :: tail1, head2 :: tail2) -> (head1 +. head2) :: (add (tail1,tail2))
+    | (head1::tail1, []) -> (head1)::(add(tail1,[]))
+    | ([],head2::tail2) -> (head2)::(add([],tail2))
+    | ([],[]) -> []
+  in add (v1,v2) 
+  
