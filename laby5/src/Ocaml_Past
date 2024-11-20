@@ -1,0 +1,11 @@
+let productOf xs ys =
+  let xs = List.sort compare xs
+  in let ys = List.sort compare ys
+  in let rec product xs ys result =
+       match (xs,ys) with
+       | ([],_) -> result
+       | (_,[]) -> result
+       | (hx::tx, hy::ty) -> if hx = hy then product tx ty (hx::result)
+           else if hx < hy then product tx ys result
+           else product xs ty result
+  in List.rev (product xs ys [])
