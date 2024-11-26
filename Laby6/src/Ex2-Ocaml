@@ -1,0 +1,16 @@
+type litera = char*bool;;
+
+ type dane_slowo = Puste | Krotkie of litera | Srednie of litera| Dlugie of litera;;
+
+
+let slowa = ["";"kokos";"neandertalczyk";"tutuututtuututtuuttututu"];;
+let znak = 'u';;
+
+let tmp s c =
+  if s = "" then Puste
+  else if (String.length s) <= 10 then Krotkie(c,(String.contains s c))
+  else if (String.length s) > 10 && (String.length s) <= 20 then Srednie(c,(String.contains s c))
+  else Dlugie(c,(String.contains s c))
+
+let changeToLitery slowa znak =
+  List.map (fun s -> tmp s znak) slowa;;
