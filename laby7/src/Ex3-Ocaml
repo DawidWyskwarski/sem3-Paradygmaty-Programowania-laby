@@ -1,0 +1,13 @@
+type 'value bt = Leaf of 'value | Node of 'value bt * 'value bt
+
+let rec contains(t1,t2) =
+  if t1 = t2 then
+    true
+  else match t1 with
+    | Leaf(_) -> false
+    | Node(l,r) -> contains(l,t2) || contains(r,t2)
+
+let t1 = Node(Node(Node(Leaf(3),Node(Leaf(0),Leaf(1))),Leaf(4) ) ,Leaf(2));;
+let t2 = Node(Node(Node(Leaf(3),Node(Leaf(0),Leaf(1))),Leaf(4) ) ,Node(Leaf(2),Leaf(4)));;
+
+contains(t1,t2);;
