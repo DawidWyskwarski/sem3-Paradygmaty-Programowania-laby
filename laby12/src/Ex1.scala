@@ -1,13 +1,15 @@
 import scala.util.Random
 
-class Buffer(val max: Int = 4000) {
+class ATM(val max: Int = 4000) {
   private var currentMoney = max
-  private val fillAmount = 1000
+  private val operationsLimit = 90
+  private var operations = 0
 
-  def fill(): Unit = synchronized {
+  def fill(fillAmount:Int): Unit = synchronized {
     if (currentMoney < max) {
       currentMoney += fillAmount
       println(s"Buffer filled: $currentMoney zł")
+
       notifyAll()
     }
   }
@@ -17,13 +19,19 @@ class Buffer(val max: Int = 4000) {
       println(s"Not enough money for ${Thread.currentThread().getName}. Waiting...")
       wait()
     }
-    currentMoney -= money
-    println(Thread.currentThread().getName + " withdrew: " + money + " zł. Remaining: " + currentMoney + " zł")
-    notifyAll()
+    if operations < operationsLimit then
+      operations+=1
+
+      currentMoney -= money
+      println(Thread.currentThread().getName + " withdrew: " + money + " zł. Remaining: " + currentMoney + " zł")
+
+      notifyAll()
+    else
+      println(s"Dear ${Thread.currentThread().getName}, ATM isn't working anymore, please come back tomorrow!")
   }
 }
 
-class Bank(buffer: Buffer) extends Thread {
+class Bank(buffer: ATM) extends Thread {
   @volatile private var running = true
 
   def stopBank(): Unit = {
@@ -33,12 +41,13 @@ class Bank(buffer: Buffer) extends Thread {
   override def run(): Unit = {
     while (running) {
       Thread.sleep(2500)
-      buffer.fill()
+      if running then
+        buffer.fill(1000)
     }
   }
 }
 
-class Client(moneyToWithdraw: Int, buffer: Buffer) extends Thread {
+class Client(moneyToWithdraw: Int, buffer: ATM) extends Thread {
   override def run(): Unit = {
     buffer.withdraw(moneyToWithdraw)
   }
@@ -48,7 +57,7 @@ class Client(moneyToWithdraw: Int, buffer: Buffer) extends Thread {
 
 object BankClientApp {
   def main(args: Array[String]): Unit = {
-    val buffer = new Buffer()
+    val buffer = new ATM(5000)
     val bank = new Bank(buffer)
     bank.start()
 
